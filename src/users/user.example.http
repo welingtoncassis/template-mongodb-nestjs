@@ -1,0 +1,18 @@
+### GET
+GET http://localhost:3000/v1/api/users?sort[createdAt]=-1
+Content-Type: application/json
+
+
+###
+GET http://localhost:3000/v1/api/users?filter[name]=welington&filter[email]=welington@email.com
+Content-Type: application/json
+
+
+### GET
+GET http://localhost:3000/v1/api/users?filter[name]=welington&sort[name]=-1&limit=3&skip=0
+Content-Type: application/json
+
+
+### GET users
+GET http://localhost:3000/v1/api/users/614b21c2b23303081f1f33cb
+Content-Type: application/json

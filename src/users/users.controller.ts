@@ -1,6 +1,17 @@
-import { Controller, Request, Patch, Body } from '@nestjs/common';
+import {
+  Controller,
+  Patch,
+  Body,
+  Post,
+  Get,
+  Query,
+  Param,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { QueryDto } from 'src/common/dtos/query.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { UserDocument } from './users.schema';
 import { UsersService } from './users.service';
 
 @Controller({
@@ -11,9 +22,21 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Patch()
-  async update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
-    const { _id } = req.user;
-    return this.usersService.update(_id, updateUserDto);
+  @Get()
+  async findAll(@Query() query: QueryDto): Promise<UserDocument[]> {
+    return this.usersService.findAll(query);
+  }
+
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserDocument> {
+    return this.usersService.create(createUserDto);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserDocument> {
+    return this.usersService.update(id, updateUserDto);
   }
 }

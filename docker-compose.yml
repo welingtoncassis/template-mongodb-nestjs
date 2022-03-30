@@ -1,0 +1,55 @@
+version: "3.8"
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build development stage from our dockerfile
+      target: development
+    # Mount our host Directory to the docker container
+    # Mount (.) current directory to the docker container template-mongodb-nestjs/src/app
+    # reflect file changes from host to container
+    volumes:
+      - .:/template-mongodb-nestjs/src/app
+      - ./template-mongodb-nestjs/src/app/node_modules
+    # Run in Debug Mode: npm run start:debug --> Don't forget to start vscode debugger!
+    # Run in dev Mode: npm run start:dev
+    command: npm run start:debug
+    depends_on: 
+      - mongo
+    environment: 
+      DATABASE_URL: mongodb://root:template-mongodb-nestjsDB2021!@mongo:27017
+      NODE_ENV: development
+      JWT_SECRET: 1hard_to_guess_secret7890a
+      PORT: 3000
+    ports:
+      - 8080:3000
+      # debugging port
+      - 9229:9229
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: template-mongodb-nestjsDB2021!
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    depends_on: 
+      - mongo
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: template-mongodb-nestjs
+      ME_CONFIG_BASICAUTH_PASSWORD: template-mongodb-nestjs2021!
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: template-mongodb-nestjsDB2021!
+
+networks: 
+    template-mongodb-nestjs-compose-network:
+      driver: bridge

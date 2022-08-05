@@ -19,4 +19,11 @@ export class UsersService extends BaseService<UserDocument> {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
     super(userModel);
   }
+
+  public async validatePassword(
+    user: User,
+    password: string,
+  ): Promise<boolean> {
+    return user.validatePassword(password);
+  }
 }
